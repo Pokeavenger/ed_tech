@@ -1,0 +1,25 @@
+{
+  "name": "ed_tech",
+  "version": "1.0.0",
+  "description": "Practicing EdTech Problem Statement..!!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pokeavenger/ed_tech.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Pokeavenger/ed_tech/issues"
+  },
+  "homepage": "https://github.com/Pokeavenger/ed_tech#readme",
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  }
+}
