@@ -6,99 +6,113 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "../services/firebase";
+import "./Login.css";
 
-function login() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    if (!email || !password) {
+      setErrorMessage("Please enter both email and password.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage("");
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
-    } catch (error) {
-      alert("Invalid credentials");
+    } catch {
+      setErrorMessage("Invalid credentials. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleGoogleLogin = async () => {
+    setIsSubmitting(true);
+    setErrorMessage("");
+
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       navigate("/dashboard");
-    } catch (error) {
-      console.log(error);
+    } catch {
+      setErrorMessage("Google sign-in failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center text-white">
-      <div className="w-full max-w-md bg-[#0b0f19] p-8 rounded-2xl shadow-2xl border border-gray-800">
+    <main className="login-page">
+      <div className="gradient-orb orb-left" aria-hidden="true" />
+      <div className="gradient-orb orb-right" aria-hidden="true" />
+      <div className="grid-overlay" aria-hidden="true" />
 
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-center text-blue-400">
-          Adaptive Learning
-        </h1>
-        <p className="text-center text-gray-400 mt-2">
-          AI-powered personalized education
+      <section className="login-card" aria-label="Login form">
+        <div className="brand-pill">Adhyayan</div>
+        <h1>Welcome back</h1>
+        <p className="subtitle">
+          Sign in to continue your personalized AI-powered learning journey.
         </p>
 
-        {/* Form */}
-        <form onSubmit={handleLogin} className="mt-6 space-y-4">
+        <form className="login-form" onSubmit={handleLogin}>
+          <label htmlFor="email">Email</label>
           <input
+            id="email"
             type="email"
-            placeholder="Email"
-            className="w-full p-3 rounded-lg bg-black border border-gray-700 focus:border-blue-500 outline-none"
+            autoComplete="email"
+            placeholder="you@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
           />
 
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
-            placeholder="Password"
-            className="w-full p-3 rounded-lg bg-black border border-gray-700 focus:border-blue-500 outline-none"
+            autoComplete="current-password"
+            placeholder="••••••••"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
           />
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 transition p-3 rounded-lg font-semibold"
-          >
-            Login
+          {errorMessage ? <p className="error-message">{errorMessage}</p> : null}
+
+          <button type="submit" className="primary-btn" disabled={isSubmitting}>
+            {isSubmitting ? "Signing in..." : "Sign in"}
           </button>
         </form>
 
-        {/* Divider */}
-        <div className="flex items-center my-6">
-          <div className="flex-grow h-px bg-gray-700" />
-          <span className="px-3 text-gray-400 text-sm">OR</span>
-          <div className="flex-grow h-px bg-gray-700" />
-        </div>
+        <div className="divider" role="separator" aria-label="or" />
 
-        {/* Google Button */}
         <button
+          type="button"
+          className="google-btn"
           onClick={handleGoogleLogin}
-          className="w-full flex items-center justify-center gap-2 bg-[#111827] border border-gray-700 hover:bg-[#1f2937] transition p-3 rounded-lg"
+          disabled={isSubmitting}
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="google"
-            className="w-5 h-5"
+            alt="Google"
           />
-          <span className="text-gray-300">Continue with Google</span>
+          Continue with Google
         </button>
 
-        <p className="text-center text-gray-500 text-sm mt-6">
-          Don't have an account?{" "}
-          <span className="text-blue-400 cursor-pointer hover:underline">
-            Sign up
-          </span>
+        <p className="footnote">
+          New here? <span>Create your account</span>
         </p>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
 
-export default login;
+export default Login;
