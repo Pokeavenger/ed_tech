@@ -1,3 +1,6 @@
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAIL1M9OYgtG-6foNIOOqCelx8wLXBfCZM",
   authDomain: "edtech-platform-714a2.firebaseapp.com",
